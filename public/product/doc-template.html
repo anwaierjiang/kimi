@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>产品详情 - 安维科技</title>
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .product-detail-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .product-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .product-header h1 {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .product-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    
+    .product-image-section {
+      text-align: center;
+    }
+    
+    .product-image {
+      width: 100%;
+      max-width: 400px;
+      height: 300px;
+      background: var(--gradient-secondary);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: white;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+    
+    .product-info {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    
+    .product-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--fg-primary);
+    }
+    
+    .product-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+    }
+    
+    .product-desc {
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .product-features {
+      margin-bottom: 2rem;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--fg-secondary);
+    }
+    
+    .feature-item::before {
+      content: '✓';
+      color: var(--accent-tertiary);
+      font-weight: bold;
+    }
+    
+    .product-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn-large {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .product-details {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    
+    .details-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--fg-primary);
+    }
+    
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: var(--fg-primary);
+    }
+    
+    .detail-value {
+      color: var(--fg-secondary);
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-on {
+      background: rgba(0, 255, 136, 0.2);
+      color: var(--success-color);
+    }
+    
+    .status-off {
+      background: rgba(255, 71, 119, 0.2);
+      color: var(--error-color);
+    }
+    
+    @media (max-width: 768px) {
+      .product-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .product-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/products.html">产品</a></li>
+        <li><a href="/chat.html">AI助手</a></li>
+        <li><a href="/works.html">作品集</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <div class="product-detail-container">
+      <!-- 产品详情 -->
+      <div id="productDetail">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>加载产品详情...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 获取URL参数
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // 加载产品详情
+    async function loadProductDetail() {
+      const productId = getUrlParameter('id');
+      if (!productId) {
+        showError('未找到产品信息');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/products/${productId}`);
+        if (!response.ok) {
+          throw new Error('产品不存在');
+        }
+        
+        const product = await response.json();
+        displayProductDetail(product);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        showError('加载产品详情失败');
+      }
+    }
+
+    // 显示产品详情
+    function displayProductDetail(product) {
+      const productDetail = document.getElementById('productDetail');
+      
+      productDetail.innerHTML = `
+        <div class="product-header">
+          <h1>${product.title}</h1>
+        </div>
+        
+        <div class="product-content">
+          <div class="product-image-section">
+            <div class="product-image">
+              ${product.cover ? `<img src="/uploads/${product.cover}" alt="${product.title}">` : '📦'}
+            </div>
+          </div>
+          
+          <div class="product-info">
+            <h2 class="product-title">${product.title}</h2>
+            <div class="product-price">¥${product.price}</div>
+            <p class="product-desc">${product.desc || '暂无描述'}</p>
+            
+            <div class="product-features">
+              <div class="feature-item">高质量数字产品</div>
+              <div class="feature-item">即时下载</div>
+              <div class="feature-item">技术支持</div>
+              <div class="feature-item">终身更新</div>
+            </div>
+            
+            <div class="product-actions">
+              ${product.status === 'on' ? 
+                `<a href="/product/submit.html?product=${product._id}" class="btn btn-primary btn-large">立即购买</a>` :
+                `<button class="btn btn-secondary btn-large" disabled>已下架</button>`
+              }
+              ${product.taobaoUrl ? 
+                `<a href="${product.taobaoUrl}" target="_blank" class="btn btn-secondary btn-large">淘宝购买</a>` :
+                ''
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div class="product-details">
+          <h3 class="details-title">产品详情</h3>
+          <div class="detail-item">
+            <span class="detail-label">产品名称</span>
+            <span class="detail-value">${product.title}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">价格</span>
+            <span class="detail-value">¥${product.price}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">状态</span>
+            <span class="detail-value">
+              <span class="status-badge ${product.status === 'on' ? 'status-on' : 'status-off'}">
+                ${product.status === 'on' ? '在售' : '下架'}
+              </span>
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">描述</span>
+            <span class="detail-value">${product.desc || '暂无描述'}</span>
+          </div>
+          ${product.taobaoUrl ? `
+            <div class="detail-item">
+              <span class="detail-label">淘宝链接</span>
+              <span class="detail-value">
+                <a href="${product.taobaoUrl}" target="_blank" style="color: var(--accent-primary);">查看淘宝页面</a>
+              </span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const productDetail = document.getElementById('productDetail');
+      productDetail.innerHTML = `
+        <div style="text-align: center; color: var(--error-color); padding: 3rem;">
+          <h2>❌ 错误</h2>
+          <p>${message}</p>
+          <a href="/products.html" class="btn btn-primary" style="margin-top: 1rem;">返回产品列表</a>
+        </div>
+      `;
+    }
+
+    // 页面加载时获取产品详情
+    document.addEventListener('DOMContentLoaded', loadProductDetail);
+  </script>
+</body>
+</html>

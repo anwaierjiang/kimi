@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>管理后台 - 安维科技</title>
+  <link rel="stylesheet" href="admin.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="admin-nav">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技 - 管理后台</a>
+      <ul class="nav-tabs">
+        <li><a href="#dashboard" class="nav-tab active" onclick="showSection('dashboard')">仪表盘</a></li>
+        <li><a href="#messages" class="nav-tab" onclick="showSection('messages')">留言管理</a></li>
+        <li><a href="#products" class="nav-tab" onclick="showSection('products')">商品管理</a></li>
+        <li><a href="#orders" class="nav-tab" onclick="showSection('orders')">订单管理</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="admin-content">
+    <div class="container">
+      <!-- 仪表盘 -->
+      <section id="dashboard" class="section active">
+        <div class="page-header">
+          <h1 class="page-title">📊 仪表盘</h1>
+          <p class="page-subtitle">实时监控系统运行状态和业务数据</p>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="grid">
+          <div class="stats-card">
+            <div class="stats-number" id="totalMessages">0</div>
+            <div class="stats-label">总留言数</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-number" id="totalProducts">0</div>
+            <div class="stats-label">商品总数</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-number" id="totalOrders">0</div>
+            <div class="stats-label">订单总数</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-number" id="pendingOrders">0</div>
+            <div class="stats-label">待处理订单</div>
+          </div>
+        </div>
+
+        <!-- 最近活动 -->
+        <div class="admin-card">
+          <div class="card-header">
+            <h2 class="card-title">🕒 最近活动</h2>
+          </div>
+          <div id="recentActivity">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>加载中...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 留言管理 -->
+      <section id="messages" class="section">
+        <div class="page-header">
+          <h1 class="page-title">💬 留言管理</h1>
+          <p class="page-subtitle">查看和管理用户留言信息</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-header">
+            <h2 class="card-title">留言列表</h2>
+            <button class="btn btn-primary" onclick="refreshMessages()">刷新</button>
+          </div>
+          <div id="messagesList">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>加载中...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 商品管理 -->
+      <section id="products" class="section">
+        <div class="page-header">
+          <h1 class="page-title">🛍️ 商品管理</h1>
+          <p class="page-subtitle">管理商品信息，添加、编辑、删除商品</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-header">
+            <h2 class="card-title">商品列表</h2>
+            <button class="btn btn-primary" onclick="showAddProductModal()">添加商品</button>
+          </div>
+          <div id="productsList">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>加载中...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 订单管理 -->
+      <section id="orders" class="section">
+        <div class="page-header">
+          <h1 class="page-title">📦 订单管理</h1>
+          <p class="page-subtitle">查看和处理用户订单</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-header">
+            <h2 class="card-title">订单列表</h2>
+            <button class="btn btn-primary" onclick="refreshOrders()">刷新</button>
+          </div>
+          <div id="ordersList">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>加载中...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 添加商品模态框 -->
+  <div id="addProductModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">添加商品</h3>
+        <button class="modal-close" onclick="closeModal('addProductModal')">&times;</button>
+      </div>
+      <form id="addProductForm">
+        <div class="form-group">
+          <label for="productTitle">商品标题</label>
+          <input type="text" id="productTitle" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">价格</label>
+          <input type="number" id="productPrice" name="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="productDesc">描述</label>
+          <textarea id="productDesc" name="desc" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="productCover">封面图片</label>
+          <input type="text" id="productCover" name="cover" placeholder="图片文件名">
+        </div>
+        <div class="form-group">
+          <label for="productTaobaoUrl">淘宝链接</label>
+          <input type="url" id="productTaobaoUrl" name="taobaoUrl" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label for="productStatus">状态</label>
+          <select id="productStatus" name="status">
+            <option value="on">上架</option>
+            <option value="off">下架</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="submit" class="btn btn-primary">添加商品</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 编辑商品模态框 -->
+  <div id="editProductModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑商品</h3>
+        <button class="modal-close" onclick="closeModal('editProductModal')">&times;</button>
+      </div>
+      <form id="editProductForm">
+        <input type="hidden" id="editProductId" name="id">
+        <div class="form-group">
+          <label for="editProductTitle">商品标题</label>
+          <input type="text" id="editProductTitle" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductPrice">价格</label>
+          <input type="number" id="editProductPrice" name="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductDesc">描述</label>
+          <textarea id="editProductDesc" name="desc" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editProductCover">封面图片</label>
+          <input type="text" id="editProductCover" name="cover" placeholder="图片文件名">
+        </div>
+        <div class="form-group">
+          <label for="editProductTaobaoUrl">淘宝链接</label>
+          <input type="url" id="editProductTaobaoUrl" name="taobaoUrl" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label for="editProductStatus">状态</label>
+          <select id="editProductStatus" name="status">
+            <option value="on">上架</option>
+            <option value="off">下架</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="submit" class="btn btn-primary">保存修改</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editProductModal')">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentSection = 'dashboard';
+
+    // 显示/隐藏页面部分
+    function showSection(sectionId) {
+      // 隐藏所有部分
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // 移除所有导航标签的active类
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // 显示选中的部分
+      document.getElementById(sectionId).classList.add('active');
+      event.target.classList.add('active');
+      
+      currentSection = sectionId;
+      
+      // 根据部分加载相应数据
+      switch(sectionId) {
+        case 'dashboard':
+          loadDashboardData();
+          break;
+        case 'messages':
+          loadMessages();
+          break;
+        case 'products':
+          loadProducts();
+          break;
+        case 'orders':
+          loadOrders();
+          break;
+      }
+    }
+
+    // 加载仪表盘数据
+    async function loadDashboardData() {
+      try {
+        const [messages, products, orders] = await Promise.all([
+          fetch('/admin/messages').then(r => r.json()),
+          fetch('/admin/products').then(r => r.json()),
+          fetch('/admin/orders').then(r => r.json())
+        ]);
+
+        document.getElementById('totalMessages').textContent = messages.length;
+        document.getElementById('totalProducts').textContent = products.length;
+        document.getElementById('totalOrders').textContent = orders.length;
+        document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+
+        // 显示最近活动
+        const recentActivity = document.getElementById('recentActivity');
+        const activities = [];
+        
+        // 添加最近的留言
+        messages.slice(-3).forEach(msg => {
+          activities.push({
+            type: 'message',
+            content: `新留言: ${msg.name} - ${msg.message.substring(0, 50)}...`,
+            time: new Date(msg.createdAt || Date.now()).toLocaleString()
+          });
+        });
+
+        // 添加最近的订单
+        orders.slice(-3).forEach(order => {
+          activities.push({
+            type: 'order',
+            content: `新订单: ${order.product} - ${order.email}`,
+            time: new Date(order.createdAt).toLocaleString()
+          });
+        });
+
+        // 按时间排序
+        activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+        recentActivity.innerHTML = activities.slice(0, 5).map(activity => `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--border-color);">
+            <div>
+              <div style="font-weight: 600; color: var(--fg-primary);">${activity.content}</div>
+              <div style="font-size: 0.9rem; color: var(--fg-secondary);">${activity.time}</div>
+            </div>
+            <div style="font-size: 1.5rem;">
+              ${activity.type === 'message' ? '💬' : '📦'}
+            </div>
+          </div>
+        `).join('') || '<p style="text-align: center; color: var(--fg-secondary);">暂无活动</p>';
+
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+        showNotification('加载数据失败', 'error');
+      }
+    }
+
+    // 加载留言
+    async function loadMessages() {
+      try {
+        const response = await fetch('/admin/messages');
+        const messages = await response.json();
+        
+        const messagesList = document.getElementById('messagesList');
+        if (messages.length === 0) {
+          messagesList.innerHTML = '<p style="text-align: center; color: var(--fg-secondary);">暂无留言</p>';
+          return;
+        }
+
+        messagesList.innerHTML = `
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>邮箱</th>
+                <th>主题</th>
+                <th>留言内容</th>
+                <th>时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${messages.map(msg => `
+                <tr>
+                  <td>${msg.name || '匿名'}</td>
+                  <td>${msg.email || '无'}</td>
+                  <td>${msg.subject || '无主题'}</td>
+                  <td>${(msg.message || msg.content || '').substring(0, 50)}...</td>
+                  <td>${new Date(msg.createdAt || Date.now()).toLocaleString()}</td>
+                  <td>
+                    <button class="btn btn-danger" onclick="deleteMessage('${msg._id}')">删除</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+        showNotification('加载留言失败', 'error');
+      }
+    }
+
+    // 加载商品
+    async function loadProducts() {
+      try {
+        const response = await fetch('/admin/products');
+        const products = await response.json();
+        
+        const productsList = document.getElementById('productsList');
+        if (products.length === 0) {
+          productsList.innerHTML = '<p style="text-align: center; color: var(--fg-secondary);">暂无商品</p>';
+          return;
+        }
+
+        productsList.innerHTML = `
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>标题</th>
+                <th>价格</th>
+                <th>状态</th>
+                <th>描述</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${products.map(product => `
+                <tr>
+                  <td>${product.title}</td>
+                  <td>¥${product.price}</td>
+                  <td><span class="status-badge ${product.status === 'on' ? 'status-on' : 'status-off'}">${product.status === 'on' ? '上架' : '下架'}</span></td>
+                  <td>${(product.desc || '').substring(0, 50)}...</td>
+                  <td>
+                    <button class="btn btn-secondary" onclick="editProduct('${product._id}')" style="margin-right: 0.5rem;">编辑</button>
+                    <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">删除</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        showNotification('加载商品失败', 'error');
+      }
+    }
+
+    // 加载订单
+    async function loadOrders() {
+      try {
+        const response = await fetch('/admin/orders');
+        const orders = await response.json();
+        
+        const ordersList = document.getElementById('ordersList');
+        if (orders.length === 0) {
+          ordersList.innerHTML = '<p style="text-align: center; color: var(--fg-secondary);">暂无订单</p>';
+          return;
+        }
+
+        ordersList.innerHTML = `
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>商品</th>
+                <th>邮箱</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orders.map(order => `
+                <tr>
+                  <td>${order.product}</td>
+                  <td>${order.email}</td>
+                  <td><span class="status-badge ${order.status === 'pending' ? 'status-pending' : 'status-done'}">${order.status === 'pending' ? '待处理' : '已完成'}</span></td>
+                  <td>${new Date(order.createdAt).toLocaleString()}</td>
+                  <td>
+                    ${order.status === 'pending' ? 
+                      `<button class="btn btn-success" onclick="markOrderDone('${order._id}')">标记完成</button>` :
+                      '<span style="color: var(--fg-secondary);">已完成</span>'
+                    }
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (error) {
+        console.error('Failed to load orders:', error);
+        showNotification('加载订单失败', 'error');
+      }
+    }
+
+    // 删除留言
+    async function deleteMessage(id) {
+      if (!confirm('确定要删除这条留言吗？')) return;
+      
+      try {
+        const response = await fetch(`/admin/messages/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+          showNotification('留言删除成功', 'success');
+          loadMessages();
+        } else {
+          showNotification('删除失败', 'error');
+        }
+      } catch (error) {
+        console.error('Failed to delete message:', error);
+        showNotification('删除失败', 'error');
+      }
+    }
+
+    // 删除商品
+    async function deleteProduct(id) {
+      if (!confirm('确定要删除这个商品吗？')) return;
+      
+      try {
+        const response = await fetch(`/admin/products/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+          showNotification('商品删除成功', 'success');
+          loadProducts();
+        } else {
+          showNotification('删除失败', 'error');
+        }
+      } catch (error) {
+        console.error('Failed to delete product:', error);
+        showNotification('删除失败', 'error');
+      }
+    }
+
+    // 标记订单完成
+    async function markOrderDone(id) {
+      try {
+        const response = await fetch(`/admin/orders/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'done' })
+        });
+        if (response.ok) {
+          showNotification('订单已标记为完成', 'success');
+          loadOrders();
+        } else {
+          showNotification('操作失败', 'error');
+        }
+      } catch (error) {
+        console.error('Failed to mark order done:', error);
+        showNotification('操作失败', 'error');
+      }
+    }
+
+    // 显示添加商品模态框
+    function showAddProductModal() {
+      document.getElementById('addProductModal').classList.add('show');
+    }
+
+    // 编辑商品
+    async function editProduct(id) {
+      try {
+        const response = await fetch(`/admin/products/${id}`);
+        const product = await response.json();
+        
+        document.getElementById('editProductId').value = product._id;
+        document.getElementById('editProductTitle').value = product.title;
+        document.getElementById('editProductPrice').value = product.price;
+        document.getElementById('editProductDesc').value = product.desc;
+        document.getElementById('editProductCover').value = product.cover;
+        document.getElementById('editProductTaobaoUrl').value = product.taobaoUrl;
+        document.getElementById('editProductStatus').value = product.status;
+        
+        document.getElementById('editProductModal').classList.add('show');
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        showNotification('加载商品信息失败', 'error');
+      }
+    }
+
+    // 关闭模态框
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+    }
+
+    // 刷新数据
+    function refreshMessages() {
+      loadMessages();
+    }
+
+    function refreshOrders() {
+      loadOrders();
+    }
+
+    // 表单提交处理
+    document.getElementById('addProductForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      
+      try {
+        const response = await fetch('/admin/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+          showNotification('商品添加成功', 'success');
+          closeModal('addProductModal');
+          this.reset();
+          loadProducts();
+        } else {
+          showNotification('添加失败', 'error');
+        }
+      } catch (error) {
+        console.error('Failed to add product:', error);
+        showNotification('添加失败', 'error');
+      }
+    });
+
+    document.getElementById('editProductForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      const id = data.id;
+      delete data.id;
+      
+      try {
+        const response = await fetch(`/admin/products/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+          showNotification('商品更新成功', 'success');
+          closeModal('editProductModal');
+          loadProducts();
+        } else {
+          showNotification('更新失败', 'error');
+        }
+      } catch (error) {
+        console.error('Failed to update product:', error);
+        showNotification('更新失败', 'error');
+      }
+    });
+
+    // 显示通知
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => notification.classList.add('show'), 100);
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDashboardData();
+    });
+
+    // 点击模态框外部关闭
+    window.addEventListener('click', function(e) {
+      if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('show');
+      }
+    });
+  </script>
+
+  <style>
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+  </style>
+</body>
+</html>

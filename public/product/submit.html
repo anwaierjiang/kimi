@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>购买商品 - 安维科技</title>
+  <link rel="stylesheet" href="../style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .purchase-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .product-info {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .product-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .product-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+    }
+    
+    .product-desc {
+      color: var(--fg-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .purchase-form {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--fg-primary);
+      text-align: center;
+    }
+    
+    .payment-info {
+      background: rgba(42, 42, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .payment-info h3 {
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+    }
+    
+    .qr-code {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    
+    .qr-code img {
+      max-width: 200px;
+      border-radius: 8px;
+    }
+    
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .step {
+      flex: 1;
+      min-width: 150px;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(42, 42, 42, 0.8);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .step-number {
+      width: 30px;
+      height: 30px;
+      background: var(--gradient-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-weight: 600;
+    }
+    
+    .step-title {
+      font-weight: 600;
+      color: var(--fg-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--fg-secondary);
+    }
+    
+    .success-message {
+      background: var(--accent-tertiary);
+      color: #000;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .error-message {
+      background: #ff4757;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/products.html">产品</a></li>
+        <li><a href="/chat.html">AI助手</a></li>
+        <li><a href="/works.html">作品集</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <div class="purchase-container">
+      <!-- 产品信息 -->
+      <div class="product-info" id="productInfo">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>加载产品信息...</p>
+        </div>
+      </div>
+
+      <!-- 购买表单 -->
+      <div class="purchase-form">
+        <h2 class="form-title">💳 完成购买</h2>
+        
+        <div id="formMessage"></div>
+        
+        <!-- 购买步骤 -->
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-title">填写信息</div>
+            <div class="step-desc">填写邮箱和支付凭证</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-title">扫码支付</div>
+            <div class="step-desc">使用微信扫码支付</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-title">等待确认</div>
+            <div class="step-desc">我们会在24小时内处理</div>
+          </div>
+        </div>
+
+        <!-- 支付信息 -->
+        <div class="payment-info">
+          <h3>💰 支付方式</h3>
+          <p>请使用微信扫码支付，支付完成后请上传支付凭证截图。</p>
+          <div class="qr-code">
+            <img src="/wechat_pay_qr.png" alt="微信支付二维码" onerror="this.style.display='none'">
+            <p style="margin-top: 1rem; color: var(--fg-secondary);">微信支付二维码</p>
+          </div>
+        </div>
+
+        <!-- 订单表单 -->
+        <form id="orderForm">
+          <input type="hidden" id="productId" name="product">
+          
+          <div class="form-group">
+            <label for="email">邮箱地址 *</label>
+            <input type="email" id="email" name="email" required placeholder="请输入您的邮箱地址">
+          </div>
+          
+          <div class="form-group">
+            <label for="payImg">支付凭证 *</label>
+            <input type="file" id="payImg" name="payImg" accept="image/*" required>
+            <small style="color: var(--fg-secondary);">请上传支付成功的截图</small>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+            提交订单
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentProduct = null;
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 获取URL参数
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // 加载产品信息
+    async function loadProduct() {
+      const productId = getUrlParameter('product');
+      if (!productId) {
+        showError('未找到产品信息');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/products/${productId}`);
+        if (!response.ok) {
+          throw new Error('产品不存在');
+        }
+        
+        currentProduct = await response.json();
+        displayProduct(currentProduct);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        showError('加载产品信息失败');
+      }
+    }
+
+    // 显示产品信息
+    function displayProduct(product) {
+      const productInfo = document.getElementById('productInfo');
+      productInfo.innerHTML = `
+        <h1 class="product-title">${product.title}</h1>
+        <div class="product-price">¥${product.price}</div>
+        <p class="product-desc">${product.desc || '暂无描述'}</p>
+        ${product.cover ? `<img src="/uploads/${product.cover}" alt="${product.title}" style="max-width: 300px; border-radius: 8px; margin: 1rem 0;">` : ''}
+      `;
+      
+      document.getElementById('productId').value = product._id;
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const productInfo = document.getElementById('productInfo');
+      productInfo.innerHTML = `
+        <div style="text-align: center; color: var(--error-color);">
+          <h2>❌ 错误</h2>
+          <p>${message}</p>
+          <a href="/products.html" class="btn btn-primary" style="margin-top: 1rem;">返回产品列表</a>
+        </div>
+      `;
+    }
+
+    // 表单提交处理
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // 显示加载状态
+      submitBtn.disabled = true;
+      submitBtn.textContent = '提交中...';
+      
+      try {
+        const response = await fetch('/api/order', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          showSuccess('订单提交成功！我们会尽快处理您的订单，并通过邮箱联系您。');
+          this.reset();
+        } else {
+          showError('订单提交失败，请稍后重试');
+        }
+      } catch (error) {
+        console.error('Failed to submit order:', error);
+        showError('网络错误，请检查网络连接后重试');
+      } finally {
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+
+    // 显示成功信息
+    function showSuccess(message) {
+      const formMessage = document.getElementById('formMessage');
+      formMessage.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        formMessage.innerHTML = '';
+      }, 5000);
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const formMessage = document.getElementById('formMessage');
+      formMessage.innerHTML = `<div class="error-message">❌ ${message}</div>`;
+      
+      // 3秒后自动隐藏
+      setTimeout(() => {
+        formMessage.innerHTML = '';
+      }, 5000);
+    }
+
+    // 页面加载时获取产品信息
+    document.addEventListener('DOMContentLoaded', loadProduct);
+  </script>
+</body>
+</html>

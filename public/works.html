@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>作品集 - 安维科技</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .works-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .works-header h1 {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .works-header p {
+      color: var(--fg-secondary);
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .work-card {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .work-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+      z-index: 1;
+    }
+    
+    .work-card:hover::before {
+      left: 100%;
+    }
+    
+    .work-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+      border-color: var(--accent-primary);
+    }
+    
+    .work-image {
+      width: 100%;
+      height: 200px;
+      background: var(--gradient-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .work-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .work-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .work-card:hover .work-overlay {
+      opacity: 1;
+    }
+    
+    .work-overlay .btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--gradient-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .work-overlay .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .work-content {
+      padding: 1.5rem;
+    }
+    
+    .work-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--fg-primary);
+    }
+    
+    .work-desc {
+      color: var(--fg-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .work-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .work-tag {
+      padding: 0.25rem 0.75rem;
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--accent-primary);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .work-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .work-stat {
+      text-align: center;
+    }
+    
+    .work-stat .number {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+    
+    .work-stat .label {
+      font-size: 0.8rem;
+      color: var(--fg-secondary);
+    }
+    
+    .category-filter {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .category-btn {
+      padding: 0.75rem 1.5rem;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--fg-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .category-btn.active {
+      background: var(--gradient-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+    
+    .category-btn:hover {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+    
+    .no-works {
+      text-align: center;
+      padding: 3rem;
+      color: var(--fg-secondary);
+    }
+    
+    .no-works h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/products.html">产品</a></li>
+        <li><a href="/chat.html">AI助手</a></li>
+        <li><a href="/works.html">作品集</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <div class="container">
+      <!-- 页面头部 -->
+      <div class="works-header">
+        <h1>🎨 作品集</h1>
+        <p>展示我们的技术实力和创意作品，每一个项目都凝聚着我们的专业与热情</p>
+      </div>
+
+      <!-- 分类筛选 -->
+      <div class="category-filter">
+        <button class="category-btn active" onclick="filterWorks('all')">全部作品</button>
+        <button class="category-btn" onclick="filterWorks('web')">Web开发</button>
+        <button class="category-btn" onclick="filterWorks('mobile')">移动应用</button>
+        <button class="category-btn" onclick="filterWorks('ai')">AI项目</button>
+        <button class="category-btn" onclick="filterWorks('design')">设计作品</button>
+      </div>
+
+      <!-- 作品展示 -->
+      <div id="worksContainer">
+        <div class="works-grid">
+          <!-- 作品1 -->
+          <div class="work-card" data-category="web">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/00d4ff/ffffff?text=电商平台" alt="电商平台">
+              <div class="work-overlay">
+                <a href="#" class="btn">查看详情</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">现代化电商平台</h3>
+              <p class="work-desc">基于React和Node.js构建的全栈电商平台，支持多商户、支付集成、库存管理等功能。</p>
+              <div class="work-tags">
+                <span class="work-tag">React</span>
+                <span class="work-tag">Node.js</span>
+                <span class="work-tag">MongoDB</span>
+                <span class="work-tag">支付集成</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">15K+</div>
+                  <div class="label">用户</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">99.9%</div>
+                  <div class="label">可用性</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">2.5s</div>
+                  <div class="label">加载时间</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 作品2 -->
+          <div class="work-card" data-category="ai">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/ff0080/ffffff?text=AI助手" alt="AI助手">
+              <div class="work-overlay">
+                <a href="/chat.html" class="btn">立即体验</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">智能AI助手</h3>
+              <p class="work-desc">集成最新AI技术的智能对话助手，支持自然语言处理、知识问答、创意生成等功能。</p>
+              <div class="work-tags">
+                <span class="work-tag">AI</span>
+                <span class="work-tag">NLP</span>
+                <span class="work-tag">机器学习</span>
+                <span class="work-tag">API集成</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">50K+</div>
+                  <div class="label">对话</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">95%</div>
+                  <div class="label">准确率</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">24/7</div>
+                  <div class="label">在线</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 作品3 -->
+          <div class="work-card" data-category="mobile">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/00ff88/ffffff?text=移动应用" alt="移动应用">
+              <div class="work-overlay">
+                <a href="#" class="btn">下载应用</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">健康管理应用</h3>
+              <p class="work-desc">跨平台健康管理应用，支持运动追踪、饮食记录、健康数据分析等功能。</p>
+              <div class="work-tags">
+                <span class="work-tag">React Native</span>
+                <span class="work-tag">Flutter</span>
+                <span class="work-tag">健康数据</span>
+                <span class="work-tag">数据分析</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">10K+</div>
+                  <div class="label">下载</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">4.8</div>
+                  <div class="label">评分</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">100+</div>
+                  <div class="label">功能</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 作品4 -->
+          <div class="work-card" data-category="design">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/ff6b35/ffffff?text=UI设计" alt="UI设计">
+              <div class="work-overlay">
+                <a href="#" class="btn">查看设计</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">企业管理系统UI</h3>
+              <p class="work-desc">现代化企业管理系统界面设计，注重用户体验和视觉美感，提升工作效率。</p>
+              <div class="work-tags">
+                <span class="work-tag">UI设计</span>
+                <span class="work-tag">用户体验</span>
+                <span class="work-tag">Figma</span>
+                <span class="work-tag">设计系统</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">200+</div>
+                  <div class="label">页面</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">50+</div>
+                  <div class="label">组件</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">98%</div>
+                  <div class="label">满意度</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 作品5 -->
+          <div class="work-card" data-category="web">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/9c27b0/ffffff?text=内容管理" alt="内容管理">
+              <div class="work-overlay">
+                <a href="#" class="btn">演示系统</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">内容管理系统</h3>
+              <p class="work-desc">高效的内容管理系统，支持多用户协作、版本控制、内容审核等功能。</p>
+              <div class="work-tags">
+                <span class="work-tag">Vue.js</span>
+                <span class="work-tag">Express</span>
+                <span class="work-tag">MySQL</span>
+                <span class="work-tag">权限管理</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">5K+</div>
+                  <div class="label">文章</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">100+</div>
+                  <div class="label">用户</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">99.5%</div>
+                  <div class="label">稳定性</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 作品6 -->
+          <div class="work-card" data-category="ai">
+            <div class="work-image">
+              <img src="https://via.placeholder.com/400x200/2196f3/ffffff?text=数据分析" alt="数据分析">
+              <div class="work-overlay">
+                <a href="#" class="btn">查看报告</a>
+              </div>
+            </div>
+            <div class="work-content">
+              <h3 class="work-title">智能数据分析平台</h3>
+              <p class="work-desc">基于机器学习的智能数据分析平台，支持数据可视化、预测分析、报表生成。</p>
+              <div class="work-tags">
+                <span class="work-tag">Python</span>
+                <span class="work-tag">TensorFlow</span>
+                <span class="work-tag">数据可视化</span>
+                <span class="work-tag">预测分析</span>
+              </div>
+              <div class="work-stats">
+                <div class="work-stat">
+                  <div class="number">1M+</div>
+                  <div class="label">数据点</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">90%</div>
+                  <div class="label">准确率</div>
+                </div>
+                <div class="work-stat">
+                  <div class="number">实时</div>
+                  <div class="label">处理</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentCategory = 'all';
+    const workCards = document.querySelectorAll('.work-card');
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 筛选作品
+    function filterWorks(category) {
+      currentCategory = category;
+      
+      // 更新按钮状态
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // 筛选作品卡片
+      workCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'all' || cardCategory === category) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeInUp 0.5s ease';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // 页面加载动画
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.work-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
+</html>

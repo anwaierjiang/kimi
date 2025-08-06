@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>管理员登录 - 安维科技</title>
+  <link rel="stylesheet" href="admin.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .login-card {
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+    }
+    
+    .login-header {
+      margin-bottom: 2rem;
+    }
+    
+    .login-title {
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    
+    .login-subtitle {
+      color: var(--fg-secondary);
+      font-size: 1rem;
+    }
+    
+    .login-form {
+      text-align: left;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--fg-secondary);
+      font-weight: 500;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(42, 42, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--fg-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .error-message {
+      background: #ff4757;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .success-message {
+      background: var(--accent-tertiary);
+      color: #000;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .back-link {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .back-link a {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .back-link a:hover {
+      color: var(--fg-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1 class="login-title">🔐 管理员登录</h1>
+        <p class="login-subtitle">请输入您的管理员凭据</p>
+      </div>
+      
+      <div id="loginMessage"></div>
+      
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input type="text" id="username" name="username" required placeholder="请输入用户名">
+        </div>
+        
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input type="password" id="password" name="password" required placeholder="请输入密码">
+        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          登录
+        </button>
+      </form>
+      
+      <div class="back-link">
+        <a href="/">← 返回首页</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginMessage = document.getElementById('loginMessage');
+
+    // 表单提交处理
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      // 显示加载状态
+      loginBtn.disabled = true;
+      loginBtn.textContent = '登录中...';
+      loginMessage.innerHTML = '';
+      
+      try {
+        const response = await fetch('/admin/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            u: username,
+            p: password
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.ok) {
+          showSuccess('登录成功！正在跳转...');
+          setTimeout(() => {
+            window.location.href = '/admin/dashboard.html';
+          }, 1000);
+        } else {
+          showError('用户名或密码错误');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('登录失败，请稍后重试');
+      } finally {
+        // 恢复按钮状态
+        loginBtn.disabled = false;
+        loginBtn.textContent = '登录';
+      }
+    });
+
+    // 显示成功信息
+    function showSuccess(message) {
+      loginMessage.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      loginMessage.innerHTML = `<div class="error-message">❌ ${message}</div>`;
+    }
+
+    // 回车键提交
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !loginBtn.disabled) {
+        loginForm.dispatchEvent(new Event('submit'));
+      }
+    });
+  </script>
+</body>
+</html>

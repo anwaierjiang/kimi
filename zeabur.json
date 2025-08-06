@@ -1,0 +1,10 @@
+{
+  "name": "anwei-site",
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "start": "node server.js",
+  "port": 3000
+}

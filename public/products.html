@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>产品展示 - 安维科技</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .products-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .products-header h1 {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .products-header p {
+      color: var(--fg-secondary);
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .search-box {
+      flex: 1;
+      min-width: 300px;
+      max-width: 500px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--fg-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+    
+    .filter-btn {
+      padding: 1rem 1.5rem;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--fg-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .filter-btn.active {
+      background: var(--gradient-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+    
+    .filter-btn:hover {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+    
+    .product-card {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .product-card:hover::before {
+      left: 100%;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+      border-color: var(--accent-primary);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 200px;
+      background: var(--gradient-secondary);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    
+    .product-status {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .status-on {
+      background: var(--accent-tertiary);
+      color: #000;
+    }
+    
+    .status-off {
+      background: #ff4757;
+      color: white;
+    }
+    
+    .product-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--fg-primary);
+    }
+    
+    .product-desc {
+      color: var(--fg-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+    
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+    }
+    
+    .product-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn-buy {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--gradient-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-buy:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .btn-detail {
+      padding: 0.75rem 1rem;
+      background: transparent;
+      color: var(--accent-primary);
+      border: 2px solid var(--accent-primary);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-detail:hover {
+      background: var(--accent-primary);
+      color: white;
+    }
+    
+    .no-products {
+      text-align: center;
+      padding: 3rem;
+      color: var(--fg-secondary);
+    }
+    
+    .no-products h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent-primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/products.html">产品</a></li>
+        <li><a href="/chat.html">AI助手</a></li>
+        <li><a href="/works.html">作品集</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <div class="container">
+      <!-- 页面头部 -->
+      <div class="products-header">
+        <h1>🛍️ 产品展示</h1>
+        <p>精选优质数字产品，助力您的数字生活和工作效率提升</p>
+      </div>
+
+      <!-- 筛选和搜索 -->
+      <div class="filters">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="搜索产品..." oninput="filterProducts()">
+        </div>
+        <button class="filter-btn active" onclick="filterByStatus('all')">全部</button>
+        <button class="filter-btn" onclick="filterByStatus('on')">在售</button>
+        <button class="filter-btn" onclick="filterByStatus('off')">下架</button>
+      </div>
+
+      <!-- 产品列表 -->
+      <div id="productsContainer">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>正在加载产品...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allProducts = [];
+    let filteredProducts = [];
+    let currentFilter = 'all';
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 加载产品数据
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        const products = await response.json();
+        allProducts = products;
+        filteredProducts = products;
+        renderProducts();
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        showError('加载产品失败，请稍后重试');
+      }
+    }
+
+    // 渲染产品列表
+    function renderProducts() {
+      const container = document.getElementById('productsContainer');
+      
+      if (filteredProducts.length === 0) {
+        container.innerHTML = `
+          <div class="no-products">
+            <h3>😔 暂无产品</h3>
+            <p>当前筛选条件下没有找到相关产品</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="grid">
+          ${filteredProducts.map(product => `
+            <div class="product-card">
+              <div class="product-image">
+                ${product.cover ? `<img src="/uploads/${product.cover}" alt="${product.title}">` : '📦'}
+                <div class="product-status ${product.status === 'on' ? 'status-on' : 'status-off'}">
+                  ${product.status === 'on' ? '在售' : '下架'}
+                </div>
+              </div>
+              <div class="product-info">
+                <h3 class="product-title">${product.title}</h3>
+                <p class="product-desc">${product.desc || '暂无描述'}</p>
+                <div class="product-price">¥${product.price || 0}</div>
+                <div class="product-actions">
+                  ${product.status === 'on' ? 
+                    `<a href="/product/submit.html?product=${product._id}" class="btn-buy">立即购买</a>` :
+                    `<button class="btn-buy" disabled style="opacity: 0.5; cursor: not-allowed;">已下架</button>`
+                  }
+                  ${product.taobaoUrl ? 
+                    `<a href="${product.taobaoUrl}" target="_blank" class="btn-detail">淘宝链接</a>` :
+                    `<a href="/product/doc-template.html?id=${product._id}" class="btn-detail">详情</a>`
+                  }
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // 搜索产品
+    function filterProducts() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      filteredProducts = allProducts.filter(product => {
+        const matchesSearch = product.title.toLowerCase().includes(searchTerm) || 
+                            (product.desc && product.desc.toLowerCase().includes(searchTerm));
+        const matchesFilter = currentFilter === 'all' || product.status === currentFilter;
+        return matchesSearch && matchesFilter;
+      });
+      renderProducts();
+    }
+
+    // 按状态筛选
+    function filterByStatus(status) {
+      currentFilter = status;
+      
+      // 更新按钮状态
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // 重新筛选
+      filterProducts();
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const container = document.getElementById('productsContainer');
+      container.innerHTML = `
+        <div class="no-products">
+          <h3>❌ 加载失败</h3>
+          <p>${message}</p>
+          <button class="btn btn-primary" onclick="loadProducts()" style="margin-top: 1rem;">重新加载</button>
+        </div>
+      `;
+    }
+
+    // 页面加载时获取产品数据
+    document.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+</body>
+</html>

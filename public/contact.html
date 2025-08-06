@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>联系我们 - 安维科技</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .contact-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .contact-header h1 {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-header p {
+      color: var(--fg-secondary);
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .contact-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    
+    .contact-form {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    
+    .contact-form h3 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--fg-primary);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--fg-secondary);
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(42, 42, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--fg-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+    
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .info-card {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+      border-color: var(--accent-primary);
+    }
+    
+    .info-card h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--fg-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .info-card p {
+      color: var(--fg-secondary);
+      line-height: 1.6;
+    }
+    
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(42, 42, 42, 0.8);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-method:hover {
+      background: var(--accent-primary);
+      color: white;
+    }
+    
+    .contact-method .icon {
+      font-size: 1.5rem;
+      width: 40px;
+      text-align: center;
+    }
+    
+    .contact-method .details {
+      flex: 1;
+    }
+    
+    .contact-method .label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .contact-method .value {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
+    .success-message {
+      background: var(--accent-tertiary);
+      color: #000;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .error-message {
+      background: #ff4757;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .map-container {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .map-placeholder {
+      width: 100%;
+      height: 200px;
+      background: var(--gradient-secondary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">安维科技</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/products.html">产品</a></li>
+        <li><a href="/chat.html">AI助手</a></li>
+        <li><a href="/works.html">作品集</a></li>
+        <li><a href="/contact.html">联系我们</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主要内容 -->
+  <div class="main-content">
+    <div class="container">
+      <!-- 页面头部 -->
+      <div class="contact-header">
+        <h1>📞 联系我们</h1>
+        <p>有任何问题或建议？我们随时为您服务，期待与您的交流</p>
+      </div>
+
+      <!-- 联系内容 -->
+      <div class="contact-content">
+        <!-- 联系表单 -->
+        <div class="contact-form">
+          <h3>💬 发送消息</h3>
+          <form id="contactForm">
+            <div id="formMessage"></div>
+            <div class="form-group">
+              <label for="name">姓名 *</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">邮箱 *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="subject">主题</label>
+              <input type="text" id="subject" name="subject" placeholder="请输入消息主题">
+            </div>
+            <div class="form-group">
+              <label for="message">消息内容 *</label>
+              <textarea id="message" name="message" required placeholder="请详细描述您的问题或建议..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <span id="submitText">发送消息</span>
+              <span id="submitIcon">📤</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 联系信息 -->
+        <div class="contact-info">
+          <!-- 联系方式 -->
+          <div class="info-card">
+            <h4>📱 联系方式</h4>
+            <div class="contact-methods">
+              <div class="contact-method">
+                <div class="icon">📧</div>
+                <div class="details">
+                  <div class="label">邮箱</div>
+                  <div class="value">contact@anwei.shop</div>
+                </div>
+              </div>
+              <div class="contact-method">
+                <div class="icon">📱</div>
+                <div class="details">
+                  <div class="label">微信/手机</div>
+                  <div class="value">13779447487@163.com</div>
+                </div>
+              </div>
+              <div class="contact-method">
+                <div class="icon">💬</div>
+                <div class="details">
+                  <div class="label">在线客服</div>
+                  <div class="value">工作日 9:00-18:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 服务时间 -->
+          <div class="info-card">
+            <h4>⏰ 服务时间</h4>
+            <p>我们致力于为您提供优质的服务体验</p>
+            <div style="margin-top: 1rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>工作日</span>
+                <span>9:00 - 18:00</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>周末</span>
+                <span>10:00 - 16:00</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>节假日</span>
+                <span>10:00 - 15:00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 地图 -->
+          <div class="map-container">
+            <h4>📍 位置信息</h4>
+            <div class="map-placeholder">
+              🗺️
+            </div>
+            <p>我们提供在线服务，无需到访实体地址</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 额外信息 -->
+      <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: rgba(26, 26, 26, 0.5); border-radius: 16px; backdrop-filter: blur(20px);">
+        <h3 style="margin-bottom: 1rem; background: var(--gradient-secondary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">为什么选择我们？</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+            <h4>快速响应</h4>
+            <p>24小时内回复您的咨询</p>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🛡️</div>
+            <h4>安全可靠</h4>
+            <p>严格保护您的隐私信息</p>
+          </div>
+          <div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💡</div>
+            <h4>专业服务</h4>
+            <p>技术专家为您解答问题</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitIcon = document.getElementById('submitIcon');
+    const formMessage = document.getElementById('formMessage');
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // 表单提交处理
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(contactForm);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        subject: formData.get('subject'),
+        message: formData.get('message')
+      };
+
+      // 显示加载状态
+      submitBtn.disabled = true;
+      submitText.textContent = '发送中...';
+      submitIcon.textContent = '⏳';
+      formMessage.innerHTML = '';
+
+      try {
+        const response = await fetch('/api/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.ok) {
+          formMessage.innerHTML = '<div class="success-message">✅ 消息发送成功！我们会尽快回复您。</div>';
+          contactForm.reset();
+        } else {
+          formMessage.innerHTML = '<div class="error-message">❌ 发送失败，请稍后重试。</div>';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        formMessage.innerHTML = '<div class="error-message">❌ 网络错误，请检查网络连接后重试。</div>';
+      } finally {
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitText.textContent = '发送消息';
+        submitIcon.textContent = '📤';
+      }
+    });
+
+    // 表单验证
+    const inputs = contactForm.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        if (this.hasAttribute('required') && !this.value.trim()) {
+          this.style.borderColor = '#ff4757';
+        } else {
+          this.style.borderColor = '';
+        }
+      });
+
+      input.addEventListener('input', function() {
+        if (this.style.borderColor === 'rgb(255, 71, 119)') {
+          this.style.borderColor = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
